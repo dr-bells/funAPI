@@ -6,6 +6,6 @@ namespace funAPI.Models
     {
         public int Id { get; set; }
         public string BookedName { get; set; } = "Anorld";
-        public string DateModified { get; set; } = DateTime.Now.ToShortDateString();
+        public DateTime DateModified { get; set; } = DateTime.UtcNow;
     }
 }

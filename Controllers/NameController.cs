@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using funAPI.Models;
+using funAPI.Services.NameService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace funAPI.Controllers
@@ -11,17 +12,17 @@ namespace funAPI.Controllers
     [Route("[controller]")]
     public class NameController : ControllerBase
     {
-        private static List<Name> names = new List<Name>
-        {
-            new Name(),
-            new Name {Id = 1, BookedName = "Tsitsi"}
+        private readonly INameService _nameService;
 
-    };
+        public NameController(INameService nameService)
+        {
+            _nameService = nameService;
+        }
 
         [HttpGet("GetAll")]
         public ActionResult<List<Name>> Get()
         {
-            return Ok(names);
+            return Ok(_nameService.GetList());
         }
 
         [HttpGet("GenerateAName")]
@@ -29,6 +30,12 @@ namespace funAPI.Controllers
         {
             string generatedName = RandomString(10);
             return Ok(generatedName);
+        }
+
+        [HttpPost]
+        public ActionResult<List<Name>> BookAName(Name newName)
+        {
+            return Ok(_nameService.BookAName(newName));
         }
 
         private static Random random = new Random();

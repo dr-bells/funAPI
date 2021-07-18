@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using funAPI.Services.NameService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,7 @@ namespace funAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "funAPI", Version = "v1" });
             });
+            services.AddScoped<INameService, NameService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
