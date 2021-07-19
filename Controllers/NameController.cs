@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
+using funAPI.DTOs.Name;
 using funAPI.Models;
 using funAPI.Services.NameService;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +22,9 @@ namespace funAPI.Controllers
         }
 
         [HttpGet("GetAll")]
-        public ActionResult<List<Name>> Get()
+        public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> Get()
         {
-            return Ok(_nameService.GetList());
+            return Ok(await _nameService.GetList());
         }
 
         [HttpGet("GenerateAName")]
@@ -33,9 +35,9 @@ namespace funAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<List<Name>> BookAName(Name newName)
+        public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> BookAName(AddNameDTO newName)
         {
-            return Ok(_nameService.BookAName(newName));
+            return Ok(await _nameService.BookAName(newName));
         }
 
         private static Random random = new Random();

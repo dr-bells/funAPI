@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using funAPI.DTOs.Name;
 using funAPI.Models;
 
 namespace funAPI.Services.NameService
 {
     public interface INameService
     {
-        List<Name> GetList();
-        List<Name> BookAName(Name newName);
+        Task<ServiceResponse<List<GetNameDTO>>> GetList();
+        Task<ServiceResponse<List<GetNameDTO>>> BookAName(AddNameDTO newName);
     }
 }

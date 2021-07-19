@@ -33,6 +33,7 @@ namespace funAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "funAPI", Version = "v1" });
             });
+            services.AddAutoMapper(typeof(Startup));
             services.AddScoped<INameService, NameService>();
         }
 
