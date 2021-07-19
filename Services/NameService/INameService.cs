@@ -9,5 +9,6 @@ namespace funAPI.Services.NameService
     {
         Task<ServiceResponse<List<GetNameDTO>>> GetList();
         Task<ServiceResponse<List<GetNameDTO>>> BookAName(AddNameDTO newName);
+        Task<ServiceResponse<List<GetNameDTO>>> DeleteAName(int id);
     }
 }

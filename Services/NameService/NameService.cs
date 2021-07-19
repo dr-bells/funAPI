@@ -1,22 +1,22 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using funAPI.Data;
 using funAPI.DTOs.Name;
 using funAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace funAPI.Services.NameService
 {
     public class NameService : INameService
     {
-        private static List<Name> names = new List<Name>
-        {
-            new Name(),
-            new Name {Id = 1, BookedName = "Tsitsi"}
-                };
         private readonly IMapper _mapper;
-        public NameService(IMapper mapper)
+        private readonly DataContext _context;
+        public NameService(IMapper mapper, DataContext context)
         {
+            _context = context;
             _mapper = mapper;
         }
 
@@ -24,16 +24,35 @@ namespace funAPI.Services.NameService
         {
             var serviceResponse = new ServiceResponse<List<GetNameDTO>>();
             Name name = (_mapper.Map<Name>(newName));
-            name.Id = names.Max(n => n.Id) + 1;
-            names.Add(name);
-            serviceResponse.Data = names.Select(c => _mapper.Map<GetNameDTO>(c)).ToList();
+            _context.Names.Add(name);
+            await _context.SaveChangesAsync();
+            serviceResponse.Data = await _context.Names.Select(c => _mapper.Map<GetNameDTO>(c)).ToListAsync();
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<List<GetNameDTO>>> DeleteAName(int id)
+        {
+            var serviceResponse = new ServiceResponse<List<GetNameDTO>>();
+            try
+            {
+                Name name = await _context.Names.FirstAsync(n => n.Id == id);
+                _context.Names.Remove(name);
+                await _context.SaveChangesAsync();
+                serviceResponse.Data = _context.Names.Select(c => _mapper.Map<GetNameDTO>(c)).ToList();
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
             return serviceResponse;
         }
 
         public async Task<ServiceResponse<List<GetNameDTO>>> GetList()
         {
             var serviceResponse = new ServiceResponse<List<GetNameDTO>>();
-            serviceResponse.Data = names.Select(c => _mapper.Map<GetNameDTO>(c)).ToList();
+            var dbNames = await _context.Names.ToListAsync();
+            serviceResponse.Data = dbNames.Select(c => _mapper.Map<GetNameDTO>(c)).ToList();
             return serviceResponse;
         }
     }

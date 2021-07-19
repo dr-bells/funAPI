@@ -40,6 +40,16 @@ namespace funAPI.Controllers
             return Ok(await _nameService.BookAName(newName));
         }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> DeleteAName(int id)
+        {
+            var response = await _nameService.DeleteAName(id);
+            if (response.Data == null)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
         private static Random random = new Random();
         public static string RandomString(int length)
         {
