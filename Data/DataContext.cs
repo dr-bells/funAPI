@@ -7,6 +7,6 @@ namespace funAPI.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         { }
-        public DbSet<Name> Names { get; set; }
+        public DbSet<Names> Names { get; set; }
     }
 }

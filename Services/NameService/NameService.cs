@@ -23,7 +23,7 @@ namespace funAPI.Services.NameService
         public async Task<ServiceResponse<List<GetNameDTO>>> BookAName(AddNameDTO newName)
         {
             var serviceResponse = new ServiceResponse<List<GetNameDTO>>();
-            Name name = (_mapper.Map<Name>(newName));
+            Names name = (_mapper.Map<Names>(newName));
             _context.Names.Add(name);
             await _context.SaveChangesAsync();
             serviceResponse.Data = await _context.Names.Select(c => _mapper.Map<GetNameDTO>(c)).ToListAsync();
@@ -35,7 +35,7 @@ namespace funAPI.Services.NameService
             var serviceResponse = new ServiceResponse<List<GetNameDTO>>();
             try
             {
-                Name name = await _context.Names.FirstAsync(n => n.Id == id);
+                Names name = await _context.Names.FirstAsync(n => n.Id == id);
                 _context.Names.Remove(name);
                 await _context.SaveChangesAsync();
                 serviceResponse.Data = _context.Names.Select(c => _mapper.Map<GetNameDTO>(c)).ToList();
@@ -46,6 +46,23 @@ namespace funAPI.Services.NameService
                 serviceResponse.Message = ex.Message;
             }
             return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<List<GetNameDTO>>> GetBookedList(string role)
+        {
+            var serviceResponse = new ServiceResponse<List<GetNameDTO>>();
+
+            if (role.ToUpper() == "ADMIN")
+            {
+                var dbNames = await _context.Names.Where(x => x.IsBooked == true).ToListAsync();
+                serviceResponse.Data = dbNames.Select(c => _mapper.Map<GetNameDTO>(c)).ToList();
+                return serviceResponse;
+            }
+            else
+            {
+                serviceResponse.Data = null;
+                return serviceResponse;
+            }
         }
 
         public async Task<ServiceResponse<List<GetNameDTO>>> GetList()

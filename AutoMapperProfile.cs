@@ -8,8 +8,8 @@ namespace funAPI
     {
         public AutoMapperProfile()
         {
-            CreateMap<Name, GetNameDTO>();
-            CreateMap<AddNameDTO, Name>();
+            CreateMap<Names, GetNameDTO>();
+            CreateMap<AddNameDTO, Names>();
         }
     }
 }

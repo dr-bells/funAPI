@@ -8,6 +8,8 @@ namespace funAPI.Services.NameService
     public interface INameService
     {
         Task<ServiceResponse<List<GetNameDTO>>> GetList();
+        Task<ServiceResponse<List<GetNameDTO>>> GetBookedList(string role);
+
         Task<ServiceResponse<List<GetNameDTO>>> BookAName(AddNameDTO newName);
         Task<ServiceResponse<List<GetNameDTO>>> DeleteAName(int id);
     }

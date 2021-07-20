@@ -5,7 +5,8 @@ namespace funAPI.DTOs.Name
     public class GetNameDTO
     {
         public int Id { get; set; }
-        public string BookedName { get; set; } = "Anorld";
-        public DateTime DateModified { get; set; } = DateTime.UtcNow;
+        public string Name { get; set; } = "Anorld";
+        public DateTime DateGenerated { get; set; } = DateTime.UtcNow;
+        public bool IsBooked { get; set; } = false;
     }
 }

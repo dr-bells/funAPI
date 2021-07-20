@@ -12,17 +12,23 @@ namespace funAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class NameController : ControllerBase
+    public class NamesController : ControllerBase
     {
         private readonly INameService _nameService;
 
-        public NameController(INameService nameService)
+        public NamesController(INameService nameService)
         {
             _nameService = nameService;
         }
 
         [HttpGet("GetAll")]
         public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> Get()
+        {
+            return Ok(await _nameService.GetList());
+        }
+
+        [HttpGet("GetAll/Booked/{role}")]
+        public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> GetAllBooked(string role)
         {
             return Ok(await _nameService.GetList());
         }
