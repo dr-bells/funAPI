@@ -10,6 +10,7 @@ namespace funAPI
         {
             CreateMap<Names, GetNameDTO>();
             CreateMap<AddNameDTO, Names>();
+            CreateMap<Names, GetBookedNamesDTO>();
         }
     }
 }

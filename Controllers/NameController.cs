@@ -55,6 +55,12 @@ namespace funAPI.Controllers
             return Ok(await _nameService.AddAName(newName));
         }
 
+        [HttpPost("Book/{id}")]
+        public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> BookAName(int id)
+        {
+            return Ok(await _nameService.BookAName(id));
+        }
+
         [HttpDelete("{role}/{id}")]
         public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> DeleteAName(string role, int id)
         {

@@ -13,6 +13,7 @@ namespace funAPI.Services.NameService
         Task<ServiceResponse<List<GetBookedNamesDTO>>> GetBookedList(string role);
         Task<ServiceResponse<List<GetNameDTO>>> AddAName(AddNameDTO newName);
         Task<ServiceResponse<List<GetNameDTO>>> DeleteAName(string role, int id);
+        Task<ServiceResponse<List<GetNameDTO>>> BookAName(int id);
 
     }
 }
