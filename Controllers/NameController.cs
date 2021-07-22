@@ -22,46 +22,48 @@ namespace funAPI.Controllers
         }
 
         [HttpGet("GetAll")]
+        public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> GetAll()
+        {
+            return Ok(await _nameService.GetAll());
+        }
+
+        [HttpGet("GetAll/Generated/Today")]
         public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> Get()
         {
-            return Ok(await _nameService.GetList());
+            return Ok(await _nameService.GetListForToday());
         }
 
         [HttpGet("GetAll/Booked/{role}")]
-        public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> GetAllBooked(string role)
+        public async Task<ActionResult<ServiceResponse<List<GetBookedNamesDTO>>>> GetAllBooked(string role)
         {
-            return Ok(await _nameService.GetList());
+            if (role.ToUpper() != "ADMIN")
+            {
+                return NotFound();
+            }
+            return Ok(await _nameService.GetBookedList(role));
         }
 
-        [HttpGet("GenerateAName")]
-        public ActionResult GenerateAName()
+        [HttpGet("Generate")]
+        public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> GenerateAName()
         {
-            string generatedName = RandomString(10);
-            return Ok(generatedName);
+            return Ok(await _nameService.GenerateAName());
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> BookAName(AddNameDTO newName)
+        [HttpPost("Add")]
+        public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> AddName(AddNameDTO newName)
         {
-            return Ok(await _nameService.BookAName(newName));
+            return Ok(await _nameService.AddAName(newName));
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> DeleteAName(int id)
+        [HttpDelete("{role}/{id}")]
+        public async Task<ActionResult<ServiceResponse<List<GetNameDTO>>>> DeleteAName(string role, int id)
         {
-            var response = await _nameService.DeleteAName(id);
-            if (response.Data == null)
+            var response = await _nameService.DeleteAName(role, id);
+            if (response.Data == null || role.ToUpper() != "ADMIN")
             {
                 return NotFound(response);
             }
             return Ok(response);
-        }
-        private static Random random = new Random();
-        public static string RandomString(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }
