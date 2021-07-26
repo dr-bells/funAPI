@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using funAPI.DTOs.Statistics;
 using funAPI.Models;
 using funAPI.Services.StatisticsService;
 using Microsoft.AspNetCore.Mvc;
@@ -22,5 +24,30 @@ namespace funAPI.Controllers
         {
             return await _statisticsService.AverageNameLength();
         }
+
+        [HttpGet("Generated/Total")]
+        public async Task<ServiceResponse<int>> TotalGeneratedNames()
+        {
+            return await _statisticsService.TotalNumberOfGeneratedNames();
+        }
+
+        [HttpGet("Generated/Daily")]
+        public async Task<ServiceResponse<List<DailyGeneratedNamesDTO>>> NumberOfDailyGeneratedNames()
+        {
+            return await _statisticsService.DailyGeneratedNames();
+        }
+
+        [HttpGet("Generated/Longest")]
+        public async Task<ServiceResponse<string>> LongestGeneratedName()
+        {
+            return await _statisticsService.GetLongestGeneratedName();
+        }
+
+        [HttpGet("Generated/Shortest")]
+        public async Task<ServiceResponse<string>> ShortestGeneratedName()
+        {
+            return await _statisticsService.GetShortestGeneratedName();
+        }
+
     }
 }
