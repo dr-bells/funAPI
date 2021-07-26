@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using funAPI.Data;
 using funAPI.Services.NameService;
+using funAPI.Services.StatisticsService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -38,6 +39,7 @@ namespace funAPI
             });
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<INameService, NameService>();
+            services.AddScoped<IStatisticsService, StatisticsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

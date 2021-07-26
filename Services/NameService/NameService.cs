@@ -30,16 +30,19 @@ namespace funAPI.Services.NameService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<GetNameDTO>>> BookAName(int id)
+        public async Task<ServiceResponse<List<GetBookedNamesDTO>>> BookAName(int id)
         {
-            var serviceResponse = new ServiceResponse<List<GetNameDTO>>();
+            var serviceResponse = new ServiceResponse<List<GetBookedNamesDTO>>();
 
             try
             {
                 Names name = await _context.Names.FirstAsync(n => n.Id == id);
                 name.IsBooked = true;
+                name.DateBooked = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
-                serviceResponse.Data = _context.Names.Select(c => _mapper.Map<GetNameDTO>(c)).ToList();
+                serviceResponse.Data = _context.Names
+                .Where(x => x.IsBooked == true)
+                .Select(c => _mapper.Map<GetBookedNamesDTO>(c)).ToList();
             }
             catch (Exception ex)
             {
@@ -99,7 +102,7 @@ namespace funAPI.Services.NameService
 
             if (role.ToUpper() == "ADMIN")
             {
-                var dbNames = await _context.Names.Where(x => x.IsBooked == true).ToListAsync();
+                var dbNames = await _context.Names.Where(x => x.IsBooked).ToListAsync();
                 serviceResponse.Data = dbNames.Select(n => _mapper.Map<GetBookedNamesDTO>(n)).ToList();
                 return serviceResponse;
             }
