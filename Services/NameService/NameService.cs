@@ -23,10 +23,22 @@ namespace funAPI.Services.NameService
         public async Task<ServiceResponse<List<GetNameDTO>>> AddAName(AddNameDTO newName)
         {
             var serviceResponse = new ServiceResponse<List<GetNameDTO>>();
-            Names name = (_mapper.Map<Names>(newName));
-            _context.Names.Add(name);
-            await _context.SaveChangesAsync();
-            serviceResponse.Data = await _context.Names.Select(c => _mapper.Map<GetNameDTO>(c)).ToListAsync();
+            var namesFromDB = await _context.Names.ToListAsync();
+            bool nameExists = false;
+            foreach (var name in namesFromDB)
+                if (name.Name == newName.Name)
+                {
+                    nameExists = true;
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "This name already exists, try to add another name";
+                }
+            if (!nameExists)
+            {
+                Names n = _mapper.Map<Names>(newName);
+                _context.Names.Add(n);
+                await _context.SaveChangesAsync();
+                serviceResponse.Data = await _context.Names.Select(n => _mapper.Map<GetNameDTO>(n)).ToListAsync();
+            }
             return serviceResponse;
         }
 
@@ -77,7 +89,8 @@ namespace funAPI.Services.NameService
         public async Task<ServiceResponse<List<GetNameDTO>>> GenerateAName()
         {
             var serviceResponse = new ServiceResponse<List<GetNameDTO>>();
-            string generatedName = NameGenerator.RandomString(10);
+            var namesFromDB = await _context.Names.ToListAsync();
+            string generatedName = NameGenerator.RandomNameGenerator(namesFromDB);
             Names name = new Names() { Name = generatedName };
             _context.Names.Add(name);
             await _context.SaveChangesAsync();
@@ -91,36 +104,26 @@ namespace funAPI.Services.NameService
         public async Task<ServiceResponse<List<GetNameDTO>>> GetAll()
         {
             var serviceResponse = new ServiceResponse<List<GetNameDTO>>();
-            var dbNames = await _context.Names.ToListAsync();
-            serviceResponse.Data = dbNames.Select(c => _mapper.Map<GetNameDTO>(c)).ToList();
+            var namesFromDB = await _context.Names.ToListAsync();
+            serviceResponse.Data = namesFromDB.Select(c => _mapper.Map<GetNameDTO>(c)).ToList();
             return serviceResponse;
         }
 
         public async Task<ServiceResponse<List<GetBookedNamesDTO>>> GetBookedList(string role)
         {
             var serviceResponse = new ServiceResponse<List<GetBookedNamesDTO>>();
-
-            if (role.ToUpper() == "ADMIN")
-            {
-                var dbNames = await _context.Names.Where(x => x.IsBooked).ToListAsync();
-                serviceResponse.Data = dbNames.Select(n => _mapper.Map<GetBookedNamesDTO>(n)).ToList();
-                return serviceResponse;
-            }
-            else
-            {
-                serviceResponse.Data = null;
-                serviceResponse.Message = "Unfortunately you are restricted to access this information";
-                return serviceResponse;
-            }
+            var namesFromDB = await _context.Names.Where(x => x.IsBooked).ToListAsync();
+            serviceResponse.Data = namesFromDB.Select(n => _mapper.Map<GetBookedNamesDTO>(n)).ToList();
+            return serviceResponse;
         }
 
         public async Task<ServiceResponse<List<GetNameDTO>>> GetListForToday()
         {
             var serviceResponse = new ServiceResponse<List<GetNameDTO>>();
-            var dbNames = await _context.Names
+            var namesFromDB = await _context.Names
             .Where(x => x.DateGenerated.Date == DateTime.UtcNow.Date)
             .ToListAsync();
-            serviceResponse.Data = dbNames.Select(c => _mapper.Map<GetNameDTO>(c)).ToList();
+            serviceResponse.Data = namesFromDB.Select(c => _mapper.Map<GetNameDTO>(c)).ToList();
             return serviceResponse;
         }
     }

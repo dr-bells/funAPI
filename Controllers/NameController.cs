@@ -37,9 +37,7 @@ namespace funAPI.Controllers
         public async Task<ActionResult<ServiceResponse<List<GetBookedNamesDTO>>>> GetAllBooked(string role)
         {
             if (role.ToUpper() != "ADMIN")
-            {
-                return NotFound();
-            }
+                return Unauthorized();
             return Ok(await _nameService.GetBookedList(role));
         }
 

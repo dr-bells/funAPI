@@ -9,7 +9,7 @@ namespace funAPI.Services.StatisticsService
     {
         Task<ServiceResponse<double>> AverageNameLength();
         Task<ServiceResponse<int>> TotalNumberOfGeneratedNames();
-        Task<ServiceResponse<List<DailyGeneratedNamesDTO>>> DailyGeneratedNames();
+        Task<ServiceResponse<int>> DailyGeneratedNames();
         Task<ServiceResponse<string>> GetLongestGeneratedName();
         Task<ServiceResponse<string>> GetShortestGeneratedName();
     }

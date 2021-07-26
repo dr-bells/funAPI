@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,11 +32,12 @@ namespace funAPI.Services.StatisticsService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<DailyGeneratedNamesDTO>>> DailyGeneratedNames()
+        public async Task<ServiceResponse<int>> DailyGeneratedNames()
         {
-            var serviceResponse = new ServiceResponse<List<DailyGeneratedNamesDTO>>();
-            var dbNames = await _context.Names.ToListAsync();
-
+            var serviceResponse = new ServiceResponse<int>();
+            var dbNames = await _context.Names
+            .Where(n => n.DateGenerated.Date == DateTime.UtcNow.Date).ToListAsync();
+            serviceResponse.Data = dbNames.Count();
             return serviceResponse;
         }
 

@@ -31,8 +31,8 @@ namespace funAPI.Controllers
             return await _statisticsService.TotalNumberOfGeneratedNames();
         }
 
-        [HttpGet("Generated/Daily")]
-        public async Task<ServiceResponse<List<DailyGeneratedNamesDTO>>> NumberOfDailyGeneratedNames()
+        [HttpGet("Generated/Today")]
+        public async Task<ServiceResponse<int>> NumberOfDailyGeneratedNames()
         {
             return await _statisticsService.DailyGeneratedNames();
         }
