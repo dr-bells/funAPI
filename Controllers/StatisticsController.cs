@@ -19,7 +19,7 @@ namespace funAPI.Controllers
 
         }
 
-        [HttpGet("AverageNameLength")]
+        [HttpGet("AverageLength")]
         public async Task<ServiceResponse<double>> GetAverageNameLength()
         {
             return await _statisticsService.AverageNameLength();

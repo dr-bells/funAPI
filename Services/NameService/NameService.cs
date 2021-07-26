@@ -26,11 +26,12 @@ namespace funAPI.Services.NameService
             var namesFromDB = await _context.Names.ToListAsync();
             bool nameExists = false;
             foreach (var name in namesFromDB)
-                if (name.Name == newName.Name)
+                if (name.Name == newName.Name || newName.Name.Any(char.IsDigit)
+                || newName.Name == " " || newName.Name.Length == 0)
                 {
                     nameExists = true;
                     serviceResponse.Success = false;
-                    serviceResponse.Message = "This name already exists, try to add another name";
+                    serviceResponse.Message = $"This name {newName.Name} already exists or is Invalid, try to add another name";
                 }
             if (!nameExists)
             {
@@ -49,12 +50,20 @@ namespace funAPI.Services.NameService
             try
             {
                 Names name = await _context.Names.FirstAsync(n => n.Id == id);
-                name.IsBooked = true;
-                name.DateBooked = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-                serviceResponse.Data = _context.Names
-                .Where(x => x.IsBooked == true)
-                .Select(c => _mapper.Map<GetBookedNamesDTO>(c)).ToList();
+                if (!name.IsBooked)
+                {
+                    name.IsBooked = true;
+                    name.DateBooked = DateTime.UtcNow;
+                    await _context.SaveChangesAsync();
+                    serviceResponse.Data = _context.Names
+                    .Where(x => x.IsBooked == true)
+                    .Select(c => _mapper.Map<GetBookedNamesDTO>(c)).ToList();
+                }
+                else
+                {
+                    serviceResponse.Message = $"The name: {name.Name} with id: {name.Id} is already booked";
+                    serviceResponse.Success = false;
+                }
             }
             catch (Exception ex)
             {
