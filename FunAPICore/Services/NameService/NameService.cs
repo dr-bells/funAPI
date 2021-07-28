@@ -70,7 +70,6 @@ namespace funAPI.Services.NameService
                 serviceResponse.Success = false;
                 serviceResponse.Message = ex.Message;
             }
-
             return serviceResponse;
         }
 

@@ -12,7 +12,7 @@ namespace funAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Names>().HasData(
-                new Names { Id = 1, Name = "Tsitsi", DateGenerated = new DateTime(2021, 07, 20, 16, 23, 40), IsBooked = false },
+                new Names { Id = 0, Name = "Tsitsi", DateGenerated = new DateTime(2021, 07, 20, 16, 23, 40), IsBooked = false },
                 new Names
                 {
                     Id = 2,
