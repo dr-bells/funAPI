@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using funAPI.Data;
 using funAPI.Services.NameService;
 using funAPI.Services.StatisticsService;
+using FunAPICore.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;

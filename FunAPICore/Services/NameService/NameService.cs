@@ -6,6 +6,7 @@ using AutoMapper;
 using funAPI.Data;
 using funAPI.DTOs.Name;
 using funAPI.Models;
+using FunAPICore.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace funAPI.Services.NameService
@@ -13,8 +14,8 @@ namespace funAPI.Services.NameService
     public class NameService : INameService
     {
         private readonly IMapper _mapper;
-        private readonly DataContext _context;
-        public NameService(IMapper mapper, DataContext context)
+        private readonly IDataContext _context;
+        public NameService(IMapper mapper, IDataContext context)
         {
             _context = context;
             _mapper = mapper;

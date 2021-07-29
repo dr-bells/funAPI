@@ -1,18 +1,26 @@
 using System;
+using System.Threading.Tasks;
 using funAPI.Models;
+using FunAPICore.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace funAPI.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : DbContext, IDataContext
     {
+        public DataContext() : base() { }
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<Names> Names { get; set; }
+
+        public Task<int> SaveChangesAsync()
+        {
+            return base.SaveChangesAsync();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Names>().HasData(
-                new Names { Id = 0, Name = "Tsitsi", DateGenerated = new DateTime(2021, 07, 20, 16, 23, 40), IsBooked = false },
+                new Names { Id = 1, Name = "Tsitsi", DateGenerated = new DateTime(2021, 07, 20, 16, 23, 40), IsBooked = false },
                 new Names
                 {
                     Id = 2,
