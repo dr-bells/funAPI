@@ -114,28 +114,55 @@ namespace funAPI.FunAPI.Tests
         }
 
         [Fact]
-        public async void BookAName_ShouldReturnListOfBookedNames_IfNameIsNotBooked()
+        public async void BookAName_ShouldReturnNull_IfNameIsBooked()
         {
             //Arrange
+            int nameId = 1;
             Names newName = new Names
             {
                 Id = 1,
                 Name = "Elizabeth",
                 DateGenerated = DateTime.UtcNow,
-                IsBooked = false
+                IsBooked = true
             };
             _inMemoryDataContext.Add(newName);
             _inMemoryDataContext.SaveChanges();
 
             //Act
-            var names = (await _sut.BookAName(1)).Data;
+            var names = (await _sut.BookAName(nameId)).Data;
 
             var namesFromDB = _inMemoryDataContext.Names
-           .Where(n => n.Id == 1)
+           .Where(n => n.Id == nameId)
            .Select(c => _mapper.Map<GetBookedNamesDTO>(c)).ToList();
 
             //Assert
-            Assert.Equal(names.Count, namesFromDB.Count);
+            Assert.NotStrictEqual(names, namesFromDB);
+        }
+
+        [Fact]
+        public async void BookAName_ShouldReturnNull_IfNameIdDoesNotExist()
+        {
+            //Arrange
+            int nameId = 2;
+            Names newName = new Names
+            {
+                Id = 1,
+                Name = "Elizabeth",
+                DateGenerated = DateTime.UtcNow,
+                IsBooked = true
+            };
+            _inMemoryDataContext.Add(newName);
+            _inMemoryDataContext.SaveChanges();
+
+            //Act
+            var names = (await _sut.BookAName(nameId)).Data;
+
+            var namesFromDB = _inMemoryDataContext.Names
+           .Where(n => n.Id == nameId)
+           .Select(c => _mapper.Map<GetBookedNamesDTO>(c)).ToList();
+
+            //Assert
+            Assert.NotStrictEqual(names, namesFromDB);
         }
     }
 }
