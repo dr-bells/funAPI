@@ -260,11 +260,11 @@ namespace funAPI.FunAPI.Tests
 
             //Act
             string namesShortest = (await _sut.GetShortestGeneratedName()).Data;
-            string namesFromDbShortest = "";
-
+            string namesFromDbShortest = _inMemoryDataContext.Names
+            .Select(n => n.Id == 1).ToString();
             foreach (var name in dbNames)
             {
-                if (namesFromDbShortest.Length > name.Name.Length & namesFromDbShortest.Length > 0)
+                if (namesFromDbShortest.Length > name.Name.Length)
                 {
                     namesFromDbShortest = name.Name;
                 }
@@ -272,6 +272,51 @@ namespace funAPI.FunAPI.Tests
 
             //Assert
             Assert.Matches(namesShortest, namesFromDbShortest);
+        }
+
+        [Fact]
+        public async void TotalNumberOfGeneratedNames_ShouldReturnNull_IfEmpty()
+        {
+            //Arrange
+            var dbNames = await _inMemoryDataContext.Names
+            .Where(n => n.DateGenerated.Date == DateTime.UtcNow.Date)
+            .ToListAsync();
+
+            //Act
+            int namesCount = (await _sut.TotalNumberOfGeneratedNames()).Data;
+            int namesFromDBcount = dbNames.Count();
+
+            //Assert
+            Assert.Equal(namesCount, namesFromDBcount);
+        }
+
+        [Fact]
+        public async void TotalNumberOfGeneratedNames_ShouldReturnNumber_IfNamesWhereGeneratedToday()
+        {
+            //Arrange
+            Names firstName = new Names
+            {
+                Name = "Anorld",
+                DateGenerated = DateTime.UtcNow,
+                IsBooked = true
+            };
+            _inMemoryDataContext.Add(firstName);
+
+            Names secondName = new Names
+            {
+                Name = "Panashe",
+                DateGenerated = DateTime.UtcNow.AddDays(-10),
+                IsBooked = false
+            };
+            _inMemoryDataContext.Add(secondName);
+            _inMemoryDataContext.SaveChanges();
+
+            //Act
+            int namesGeneratedTotal = (await _sut.TotalNumberOfGeneratedNames()).Data;
+            int namesFromDbGeneratedTotal = _inMemoryDataContext.Names.Count();
+
+            //Assert
+            Assert.Equal(namesGeneratedTotal, namesFromDbGeneratedTotal);
         }
     }
 }
