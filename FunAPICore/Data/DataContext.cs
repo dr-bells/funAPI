@@ -1,12 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using funAPI.Models;
-using FunAPICore.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace funAPI.Data
 {
-    public class DataContext : DbContext, IDataContext
+    public class DataContext : DbContext
     {
         public DataContext() : base() { }
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }

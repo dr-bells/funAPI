@@ -2,37 +2,37 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using funAPI.Models;
+using FunAPICore.Data;
 
 namespace funAPI
 {
-    public class NameGenerator
+    public static class NameGenerator
     {
-        private static Random random = new Random();
+        private static Random _random = new Random();
         public static string RandomNameGenerator(List<Names> dbNames)
         {
             string newGeneratedName = "";
-            const string bigChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            const string smallChars = "abcdefghijklmnopqrstuvwxyz";
             bool nameExists = false;
 
             do
             {
-                newGeneratedName = NameGen(bigChars, smallChars);
-                foreach (var name in dbNames)
-                    if (name.Name == newGeneratedName)
-                        nameExists = true;
+                Names newName = new Names();
+                newGeneratedName = GenerateName(Constants.BigCharacters, Constants.SmallCharacters);
+                newName.Name = newGeneratedName;
+                if (dbNames.Contains(newName))
+                    nameExists = true;
             } while (nameExists);
             return newGeneratedName;
         }
 
-        private static string NameGen(string bigChars, string smallChars)
+        private static string GenerateName(string bigChars, string smallChars)
         {
-            string newGenName = new string(Enumerable.Repeat(bigChars, 1)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
+            int length = _random.Next(3, 49);
 
-            int length = random.Next(3, 49);
+            string newGenName = new string(Enumerable.Repeat(bigChars, 1)
+              .Select(s => s[_random.Next(s.Length)]).ToArray());
             newGenName += new string(Enumerable.Repeat(smallChars, length)
-                  .Select(s => s[random.Next(s.Length)]).ToArray());
+                  .Select(s => s[_random.Next(s.Length)]).ToArray());
             return newGenName;
         }
     }

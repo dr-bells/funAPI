@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using funAPI.Data;
 using funAPI.Services.NameService;
 using funAPI.Services.StatisticsService;
-using FunAPICore.Data;
+using FunAPICore.Services.AdminService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -40,6 +40,7 @@ namespace funAPI
             });
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<INameService, NameService>();
+            services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
         }
 
@@ -53,11 +54,7 @@ namespace funAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "funAPI v1"));
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

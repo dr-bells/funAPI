@@ -6,7 +6,6 @@ using AutoMapper;
 using funAPI.Data;
 using funAPI.DTOs.Name;
 using funAPI.Models;
-using FunAPICore.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace funAPI.Services.NameService
@@ -14,8 +13,8 @@ namespace funAPI.Services.NameService
     public class NameService : INameService
     {
         private readonly IMapper _mapper;
-        private readonly IDataContext _context;
-        public NameService(IMapper mapper, IDataContext context)
+        private readonly DataContext _context;
+        public NameService(IMapper mapper, DataContext context)
         {
             _context = context;
             _mapper = mapper;
@@ -74,26 +73,7 @@ namespace funAPI.Services.NameService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<GetNameDTO>>> DeleteAName(string role, int id)
-        {
-            var serviceResponse = new ServiceResponse<List<GetNameDTO>>();
-            if (role.ToUpper() == "ADMIN")
-            {
-                try
-                {
-                    Names name = await _context.Names.FirstAsync(n => n.Id == id);
-                    _context.Names.Remove(name);
-                    await _context.SaveChangesAsync();
-                    serviceResponse.Data = _context.Names.Select(c => _mapper.Map<GetNameDTO>(c)).ToList();
-                }
-                catch (Exception ex)
-                {
-                    serviceResponse.Success = false;
-                    serviceResponse.Message = ex.Message;
-                }
-            }
-            return serviceResponse;
-        }
+
 
         public async Task<ServiceResponse<List<GetNameDTO>>> GenerateAName()
         {
@@ -117,15 +97,6 @@ namespace funAPI.Services.NameService
             serviceResponse.Data = namesFromDB.Select(c => _mapper.Map<GetNameDTO>(c)).ToList();
             return serviceResponse;
         }
-
-        public async Task<ServiceResponse<List<GetBookedNamesDTO>>> GetBookedList(string role)
-        {
-            var serviceResponse = new ServiceResponse<List<GetBookedNamesDTO>>();
-            var namesFromDB = await _context.Names.Where(x => x.IsBooked).ToListAsync();
-            serviceResponse.Data = namesFromDB.Select(n => _mapper.Map<GetBookedNamesDTO>(n)).ToList();
-            return serviceResponse;
-        }
-
         public async Task<ServiceResponse<List<GetNameDTO>>> GetListForToday()
         {
             var serviceResponse = new ServiceResponse<List<GetNameDTO>>();

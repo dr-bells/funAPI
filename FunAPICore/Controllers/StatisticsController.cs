@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace funAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     public class StatisticsController : ControllerBase
     {
         private readonly IStatisticsService _statisticsService;
