@@ -24,9 +24,12 @@ namespace funAPI.Services.StatisticsService
         public async Task<ServiceResponse<double>> AverageNameLength()
         {
             var serviceResponse = new ServiceResponse<double>();
-            var dbNames = await _context.Names.ToListAsync();
-            if (dbNames.Count != 0)
-                serviceResponse.Data = StatisticsCalculator.AverageNameLengthCalculator(dbNames);
+
+            var averageLength = (from name in _context.Names select name)
+            .Average(n => n.Name.Length);
+
+            if (_context.Names.Count() != 0)
+                serviceResponse.Data = averageLength;
             else
                 serviceResponse.Message = "The Database is empty";
             return serviceResponse;

@@ -36,8 +36,7 @@ namespace funAPI.Services.NameService
             if (!nameExists)
             {
                 Names n = _mapper.Map<Names>(newName);
-                _context.Names.Add(n);
-                await _context.SaveChangesAsync();
+                await _context.Names.AddAsync(n);
                 serviceResponse.Data = await _context.Names.Select(n => _mapper.Map<GetNameDTO>(n)).ToListAsync();
             }
             return serviceResponse;
@@ -72,8 +71,6 @@ namespace funAPI.Services.NameService
             }
             return serviceResponse;
         }
-
-
 
         public async Task<ServiceResponse<List<GetNameDTO>>> GenerateAName()
         {
